@@ -186,6 +186,6 @@ export async function login(
 
   return {
     token: 'mock-jwt-' + Math.random().toString(36).slice(2),
-    user: { name: 'Tolu Adesina', role: 'Senior analyst' },
+    user: { name: 'Sherifdeen Adebayo', role: 'Senior Analyst' },
   };
 }

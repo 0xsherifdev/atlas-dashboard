@@ -13,10 +13,12 @@ interface AuthState {
   token: string | null;
   loading: boolean;
   error: string | null;
+  _hasHydrated: boolean;
 
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => void;
   clearError: () => void;
+  setHasHydrated: (v: boolean) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -27,6 +29,7 @@ export const useAuthStore = create<AuthState>()(
       token: null,
       loading: false,
       error: null,
+      _hasHydrated: false,
 
       signIn: async (email, password) => {
         set({ loading: true, error: null });
@@ -43,6 +46,7 @@ export const useAuthStore = create<AuthState>()(
       },
 
       clearError: () => set({ error: null }),
+      setHasHydrated: (v) => set({ _hasHydrated: v }),
     }),
     {
       name: 'atlas-auth',
@@ -52,6 +56,9 @@ export const useAuthStore = create<AuthState>()(
         user: state.user,
         token: state.token,
       }),
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
     }
   )
 );

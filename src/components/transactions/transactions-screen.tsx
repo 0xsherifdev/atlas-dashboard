@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef } from 'react';
 import { Search, ChevronLeft, ChevronRight, ChevronDown, Clock, Download, Columns, Plus, X, AlertTriangle, RefreshCw } from 'lucide-react';
 import { useTransactionStore } from '@/store/useTransactionStore';
 import { useUIStore } from '@/store/useUIStore';
@@ -36,7 +36,6 @@ export function TransactionsScreen() {
     transactions.forEach((tx) => {
       if (!seenIds.current.has(tx.id)) {
         if (seenIds.current.size > 0) {
-          // This id wasn't there before — it's a WS insert
           newIds.current.add(tx.id);
           setTimeout(() => newIds.current.delete(tx.id), 1500);
         }
@@ -103,74 +102,77 @@ export function TransactionsScreen() {
             )}
           </p>
         </div>
-        <div className="flex gap-2">
+        {/* Desktop-only action buttons */}
+        <div className="hidden md:flex gap-2">
           <Btn icon={<Columns size={13} />} label="Columns" />
           <Btn icon={<Download size={13} />} label="Export CSV" />
           <Btn icon={<Plus size={13} />} label="Save view" primary />
         </div>
       </div>
 
-      {/* Filter toolbar */}
+      {/* Filter toolbar — scrollable on mobile */}
       <div
-        className="flex items-center gap-2 rounded-t-[10px] border border-b-0 bg-(--atlas-surface) px-4 py-3"
-        style={{ borderColor: 'var(--atlas-border)' }}
+        className="overflow-x-auto rounded-t-[10px] border border-b-0"
+        style={{ background: 'var(--atlas-surface)', borderColor: 'var(--atlas-border)' }}
       >
-        {/* Search */}
-        <div
-          className="flex flex-[0_0_280px] items-center gap-2 rounded-[7px] border px-[10px] py-[6px] text-[13px]"
-          style={{ background: 'var(--atlas-bg)', borderColor: 'var(--atlas-border)', color: 'var(--atlas-text-2)' }}
-        >
-          <Search size={13} className="flex-shrink-0 opacity-60" />
-          <input
-            placeholder="Search by ID, customer, merchant…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="flex-1 border-0 bg-transparent text-[13px] outline-none"
-            style={{ color: 'var(--atlas-text)' }}
-          />
-          {search && (
-            <button onClick={() => setSearch('')} style={{ color: 'var(--atlas-text-3)', background: 'none', border: 'none', cursor: 'pointer', display: 'grid', placeItems: 'center' }}>
-              <X size={12} />
-            </button>
-          )}
-        </div>
-
-        <Divider />
-
-        {/* Status chips */}
-        <div className="flex items-center gap-1">
-          <span className="font-mono text-[11px] uppercase tracking-[.06em] mr-1" style={{ color: 'var(--atlas-text-3)' }}>Status</span>
-          {STATUSES.map((s) => (
-            <Chip
-              key={s}
-              label={s}
-              active={statuses.has(s)}
-              onClick={() => toggleStatus(s)}
+        <div className="flex min-w-max items-center gap-2 px-4 py-3">
+          {/* Search */}
+          <div
+            className="flex w-[220px] items-center gap-2 rounded-[7px] border px-[10px] py-[6px] text-[13px]"
+            style={{ background: 'var(--atlas-bg)', borderColor: 'var(--atlas-border)', color: 'var(--atlas-text-2)' }}
+          >
+            <Search size={13} className="flex-shrink-0 opacity-60" />
+            <input
+              placeholder="Search…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="flex-1 border-0 bg-transparent text-[13px] outline-none"
+              style={{ color: 'var(--atlas-text)' }}
             />
-          ))}
+            {search && (
+              <button onClick={() => setSearch('')} style={{ color: 'var(--atlas-text-3)', background: 'none', border: 'none', cursor: 'pointer', display: 'grid', placeItems: 'center' }}>
+                <X size={12} />
+              </button>
+            )}
+          </div>
+
+          <Divider />
+
+          {/* Status chips */}
+          <div className="flex items-center gap-1">
+            <span className="font-mono text-[11px] uppercase tracking-[.06em] mr-1" style={{ color: 'var(--atlas-text-3)' }}>Status</span>
+            {STATUSES.map((s) => (
+              <Chip
+                key={s}
+                label={s}
+                active={statuses.has(s)}
+                onClick={() => toggleStatus(s)}
+              />
+            ))}
+          </div>
+
+          <Divider />
+
+          {/* Risk chips */}
+          <div className="flex items-center gap-1">
+            <span className="font-mono text-[11px] uppercase tracking-[.06em] mr-1" style={{ color: 'var(--atlas-text-3)' }}>Risk</span>
+            {RISKS.map((r) => (
+              <Chip
+                key={r}
+                label={r}
+                active={risks.has(r)}
+                onClick={() => toggleRisk(r)}
+              />
+            ))}
+          </div>
+
+          <div className="flex-1" />
+
+          <Btn icon={<Clock size={13} />} label="Last 24h" suffix={<ChevronDown size={12} />} />
         </div>
-
-        <Divider />
-
-        {/* Risk chips */}
-        <div className="flex items-center gap-1">
-          <span className="font-mono text-[11px] uppercase tracking-[.06em] mr-1" style={{ color: 'var(--atlas-text-3)' }}>Risk</span>
-          {RISKS.map((r) => (
-            <Chip
-              key={r}
-              label={r}
-              active={risks.has(r)}
-              onClick={() => toggleRisk(r)}
-            />
-          ))}
-        </div>
-
-        <div className="flex-1" />
-
-        <Btn icon={<Clock size={13} />} label="Last 24h" suffix={<ChevronDown size={12} />} />
       </div>
 
-      {/* Table */}
+      {/* Empty state */}
       {transactions.length === 0 ? (
         <div
           className="rounded-b-[10px] border border-t-0 px-16 py-16 text-center"
@@ -195,8 +197,60 @@ export function TransactionsScreen() {
         </div>
       ) : (
         <>
+          {/* ── Mobile: card list ───────────────────────────────────── */}
           <div
-            className="border-x"
+            className="block md:hidden border-x border-b rounded-b-[10px] overflow-hidden"
+            style={{ background: 'var(--atlas-surface)', borderColor: 'var(--atlas-border)' }}
+          >
+            {transactions.map((tx) => {
+              const isSelected = selectedId === tx.id;
+              const isNew = newIds.current.has(tx.id);
+              return (
+                <button
+                  key={tx.id}
+                  className={cn('w-full text-left flex items-center gap-3 px-4 py-3', isNew && 'animate-row-flash')}
+                  style={{
+                    display: 'flex',
+                    background: isSelected ? 'var(--atlas-selected)' : 'transparent',
+                    border: 'none',
+                    borderBottom: '1px solid var(--atlas-border)',
+                    cursor: 'pointer',
+                    width: '100%',
+                    padding: '12px 16px',
+                  }}
+                  onClick={() => selectTransaction(isSelected ? null : tx.id)}
+                >
+                  <AtlasAvatar name={tx.customer.name} id={tx.customer.id} size="md" />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+                      <span className="font-medium text-[14px] truncate" style={{ color: 'var(--atlas-text)' }}>
+                        {tx.customer.name}
+                      </span>
+                      <span
+                        className="font-mono font-medium text-[13px] flex-shrink-0"
+                        style={{
+                          fontVariantNumeric: 'tabular-nums',
+                          color: tx.direction === 'in' ? 'var(--atlas-status-ok)' : 'var(--atlas-text)',
+                        }}
+                      >
+                        {fmtCcy(tx.amount, tx.currency)}
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginTop: 2 }}>
+                      <span className="font-mono text-[11px] truncate" style={{ color: 'var(--atlas-text-3)' }}>
+                        {tx.merchant.name} · {fmtTime(tx.ts)}
+                      </span>
+                      <StatusPill status={tx.status} />
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* ── Desktop: table ──────────────────────────────────────── */}
+          <div
+            className="hidden md:block border-x"
             style={{ background: 'var(--atlas-surface)', borderColor: 'var(--atlas-border)' }}
           >
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
@@ -320,8 +374,8 @@ export function TransactionsScreen() {
               <span style={{ fontVariantNumeric: 'tabular-nums' }}>{totalCount.toLocaleString()}</span>
             </div>
             <div className="flex items-center gap-[6px]">
-              <span style={{ color: 'var(--atlas-text-3)' }}>Rows · {filters.perPage}</span>
-              <span style={{ color: 'var(--atlas-text-4)', margin: '0 6px' }}>·</span>
+              <span className="hidden sm:inline" style={{ color: 'var(--atlas-text-3)' }}>Rows · {filters.perPage}</span>
+              <span className="hidden sm:inline" style={{ color: 'var(--atlas-text-4)', margin: '0 6px' }}>·</span>
               <div className="flex gap-[2px]">
                 <PageBtn
                   disabled={cur === 1}

@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { Sidebar } from './sidebar';
 import { Topbar } from './topbar';
 import { Statusbar } from './statusbar';
+import { BottomNav } from './bottom-nav';
 import { DashboardScreen } from '@/components/dashboard/dashboard-screen';
 import { TransactionsScreen } from '@/components/transactions/transactions-screen';
 import { TransactionDrawer } from '@/components/drawer/transaction-drawer';
@@ -33,24 +34,40 @@ export function AppShell() {
   return (
     <div
       className={dark ? 'dark' : ''}
-      style={{ height: '100vh', background: 'var(--atlas-bg)' }}
+      style={{ height: '100dvh', background: 'var(--atlas-bg)' }}
     >
       <div className="flex h-full">
-        <Sidebar />
+        {/* Sidebar: desktop only */}
+        <div className="hidden md:flex h-full">
+          <Sidebar />
+        </div>
+
         <div className="flex flex-1 flex-col min-w-0">
           <Topbar />
-          {/* Main content area — relative so the drawer can overlay it */}
+
+          {/* Main content area */}
           <div className="relative flex-1 overflow-hidden">
-            <div className="h-full overflow-auto p-6">
+            <div className="h-full overflow-auto p-3 md:p-6">
               {view === 'dashboard'    && <DashboardScreen />}
               {view === 'transactions' && <TransactionsScreen />}
             </div>
-            {/* Drawer overlays the content area */}
-            {selectedId && <TransactionDrawer />}
           </div>
-          <Statusbar />
+
+          {/* Status bar: desktop only */}
+          <div className="hidden md:block">
+            <Statusbar />
+          </div>
+
+          {/* Bottom nav: mobile only */}
+          <div className="md:hidden">
+            <BottomNav />
+          </div>
         </div>
       </div>
+
+      {/* Drawer rendered at shell level with fixed positioning so it
+          overlays everything correctly on both desktop and mobile */}
+      {selectedId && <TransactionDrawer />}
     </div>
   );
 }

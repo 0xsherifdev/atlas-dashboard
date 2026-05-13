@@ -20,6 +20,14 @@ import type {
   RiskLevel,
 } from '@/types';
 
+// Request ID to cancel stale responses when filters change mid-flight
+let _loadId = 0;
+
+// Buffer WS-inserted transactions and apply after a short delay so
+// rows don't shuffle while the user is in the middle of clicking.
+let _pendingWsTx: Transaction[] = [];
+let _wsFlushTimer: ReturnType<typeof setTimeout> | null = null;
+
 interface TransactionState {
   // ── Fetched data ────────────────────────────────────────────────────────────
   transactions: Transaction[];
@@ -78,9 +86,11 @@ export const useTransactionStore = create<TransactionState>()((set, get) => ({
   // ── Data fetching ────────────────────────────────────────────────────────────
 
   loadTransactions: async () => {
+    const id = ++_loadId;
     set({ txLoading: true, txError: null });
     try {
       const { data, meta } = await fetchTransactions(get().filters);
+      if (id !== _loadId) return; // stale — a newer request already resolved
       set({
         transactions: data,
         totalCount: meta?.total ?? data.length,
@@ -88,6 +98,7 @@ export const useTransactionStore = create<TransactionState>()((set, get) => ({
         txLoading: false,
       });
     } catch (e) {
+      if (id !== _loadId) return;
       set({ txLoading: false, txError: (e as Error).message });
     }
   },
@@ -142,21 +153,29 @@ export const useTransactionStore = create<TransactionState>()((set, get) => ({
   // ── WebSocket patches ────────────────────────────────────────────────────────
 
   wsAddTransaction: (tx) => {
-    set((s) => ({
-      transactions: [tx, ...s.transactions].slice(0, s.filters.perPage),
-      totalCount: s.totalCount + 1,
-      // Also patch the dashboard flagged count if relevant
-      dashboard: s.dashboard
-        ? {
-            ...s.dashboard,
-            totalTransactions: s.dashboard.totalTransactions + 1,
-            flaggedCount:
-              tx.status === 'flagged' || tx.status === 'blocked' || tx.status === 'review'
-                ? s.dashboard.flaggedCount + 1
-                : s.dashboard.flaggedCount,
-          }
-        : s.dashboard,
-    }));
+    // Buffer incoming WS transactions and flush after 2s so row positions
+    // stay stable while the user is clicking — prevents missed clicks.
+    _pendingWsTx.push(tx);
+    if (_wsFlushTimer) clearTimeout(_wsFlushTimer);
+    _wsFlushTimer = setTimeout(() => {
+      const pending = _pendingWsTx.splice(0);
+      _wsFlushTimer = null;
+      set((s) => ({
+        transactions: [...pending, ...s.transactions].slice(0, s.filters.perPage),
+        totalCount: s.totalCount + pending.length,
+        dashboard: s.dashboard
+          ? {
+              ...s.dashboard,
+              totalTransactions: s.dashboard.totalTransactions + pending.length,
+              flaggedCount:
+                s.dashboard.flaggedCount +
+                pending.filter(
+                  (t) => t.status === 'flagged' || t.status === 'blocked' || t.status === 'review'
+                ).length,
+            }
+          : s.dashboard,
+      }));
+    }, 2000);
   },
 
   wsUpdateStatus: (id, status, rs) => {

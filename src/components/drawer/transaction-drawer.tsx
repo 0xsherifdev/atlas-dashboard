@@ -13,9 +13,22 @@ import type { Transaction, TimelineEvent } from '@/types';
 
 type Tab = 'overview' | 'indicators' | 'history' | 'timeline';
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    const mq = window.matchMedia('(max-width: 767px)');
+    mq.addEventListener('change', check);
+    return () => mq.removeEventListener('change', check);
+  }, []);
+  return isMobile;
+}
+
 export function TransactionDrawer() {
   const { transactions, selectedId, selectTransaction } = useTransactionStore();
   const { dark } = useUIStore();
+  const isMobile = useIsMobile();
 
   const tx = selectedId ? transactions.find((t) => t.id === selectedId) : null;
 
@@ -31,21 +44,32 @@ export function TransactionDrawer() {
 
   return (
     <>
-      {/* Overlay */}
+      {/* Overlay — fixed over entire viewport */}
       <div
-        className="animate-fade-in absolute inset-0 z-10"
+        className="animate-fade-in fixed inset-0 z-40"
         style={{ background: 'rgba(0,0,0,.32)' }}
         onClick={() => selectTransaction(null)}
       />
+
       {/* Drawer panel */}
       <div
-        className="animate-slide-in-right absolute bottom-0 right-0 top-0 z-20 flex w-[560px] flex-col border-l"
+        className={isMobile
+          ? 'animate-slide-in-up fixed bottom-0 left-0 right-0 z-50 flex flex-col rounded-t-[20px] border-t'
+          : 'animate-slide-in-right fixed bottom-0 right-0 top-0 z-50 flex w-[560px] flex-col border-l'
+        }
         style={{
           background: 'var(--atlas-surface)',
           borderColor: 'var(--atlas-border)',
           boxShadow: 'var(--atlas-shadow-lg)',
+          maxHeight: isMobile ? '92dvh' : undefined,
         }}
       >
+        {/* Mobile drag handle */}
+        {isMobile && (
+          <div className="flex justify-center pt-3 pb-1">
+            <div className="h-1 w-10 rounded-full" style={{ background: 'var(--atlas-border-2)' }} />
+          </div>
+        )}
         <DrawerContent tx={tx} dark={dark} onClose={() => selectTransaction(null)} onSelectTx={selectTransaction} />
       </div>
     </>
@@ -359,7 +383,6 @@ function HistoryTab({ history, tx, onSelectTx }: { history: Transaction[] | null
             <button
               key={h.id}
               onClick={() => onSelectTx(h.id)}
-              className="flex items-center gap-3 border-b py-[10px] text-left transition-colors"
               style={{ all: 'unset', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid var(--atlas-border)' }}
             >
               <div className="flex-1">
@@ -428,10 +451,7 @@ function TimelineTab({ timeline, tx }: { timeline: TimelineEvent[] | null; tx: T
           style={{ background: 'var(--atlas-border-2)' }}
         />
         {timeline.map((ev, i) => (
-          <div
-            key={i}
-            className="relative pb-[14px] pt-1"
-          >
+          <div key={i} className="relative pb-[14px] pt-1">
             {/* dot */}
             <span
               className="absolute -left-[18px] top-2 inline-block h-[11px] w-[11px] rounded-full"

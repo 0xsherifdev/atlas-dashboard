@@ -128,8 +128,8 @@ class MockWebSocketService {
 
   private scheduleNextTx(): void {
     if (!this._connected) return;
-    // New transaction every 8–14 seconds
-    const ms = 8000 + Math.random() * 6000;
+    // New transaction every 15–25 seconds
+    const ms = 15000 + Math.random() * 10000;
     this.newTxTimer = setTimeout(() => {
       if (!this._connected) return;
       const tx = nextIncomingTx();
@@ -140,8 +140,8 @@ class MockWebSocketService {
 
   private scheduleNextStatusUpdate(): void {
     if (!this._connected) return;
-    // Status change every 20–35 seconds
-    const ms = 20000 + Math.random() * 15000;
+    // Status change every 40–60 seconds
+    const ms = 40000 + Math.random() * 20000;
     this.statusTimer = setTimeout(() => {
       if (!this._connected || this.knownIds.length === 0) {
         this.scheduleNextStatusUpdate();
@@ -165,8 +165,8 @@ class MockWebSocketService {
 
   private scheduleNextRiskUpdate(): void {
     if (!this._connected) return;
-    // Risk score recalc every 30–50 seconds
-    const ms = 30000 + Math.random() * 20000;
+    // Risk score recalc every 60–90 seconds
+    const ms = 60000 + Math.random() * 30000;
     this.riskTimer = setTimeout(() => {
       if (!this._connected || this.knownIds.length === 0) {
         this.scheduleNextRiskUpdate();

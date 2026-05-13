@@ -45,7 +45,7 @@ export function Sidebar() {
 
   return (
     <aside
-      className="flex h-full w-[220px] flex-shrink-0 flex-col gap-6 border-r px-3 py-4"
+      className="flex h-full w-[220px] shrink-0 flex-col gap-6 border-r px-3 py-4"
       style={{
         background: 'var(--atlas-surface)',
         borderColor: 'var(--atlas-border)',

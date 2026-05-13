@@ -226,8 +226,20 @@
   100% { transform: scale(1); opacity: 1; }
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideInUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+.animate-fade-in        { animation: fadeIn .15s ease both; }
 .animate-live-pulse     { animation: livePulse 2s ease-out infinite; }
 .animate-slide-in-right { animation: slideInRight .22s cubic-bezier(.2,.7,.3,1) both; }
+.animate-slide-in-up    { animation: slideInUp .3s cubic-bezier(.2,.7,.3,1) both; }
 .animate-row-flash      { animation: rowFlash 1.4s ease-out both; }
 .animate-badge-pop      { animation: badgePop .25s cubic-bezier(.34,1.56,.64,1) both; }
 .animate-shimmer {

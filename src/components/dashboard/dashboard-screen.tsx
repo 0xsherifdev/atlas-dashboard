@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect } from 'react';
-import { RefreshCw, Plus, AlertTriangle } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { RefreshCw, AlertTriangle } from 'lucide-react';
 import { useTransactionStore } from '@/store/useTransactionStore';
 import { useUIStore } from '@/store/useUIStore';
 import { KpiCard, KpiCardSkeleton } from './kpi-card';
 import { ActivityHistogram } from '@/components/charts/activity-histogram';
 import { RiskDistribution } from '@/components/charts/risk-distribution';
-import { StatusPill, RiskPill } from '@/components/ui/status-pill';
+import { RiskPill } from '@/components/ui/status-pill';
 import { AtlasAvatar } from '@/components/ui/atlas-avatar';
 import { fmtCcy, fmtTime } from '@/lib/utils';
 
@@ -18,7 +18,8 @@ const TIME_RANGES: TimeRange[] = ['24H', '7D', '30D', 'Custom…'];
 
 export function DashboardScreen() {
   const { dashboard, dashLoading, dashError, loadDashboard } = useTransactionStore();
-  const { dark, view, setView } = useUIStore();
+  const { dark, setView } = useUIStore();
+  const [timeRange, setTimeRange] = useState<TimeRange>('24H');
 
   useEffect(() => {
     if (!dashboard) loadDashboard();
@@ -71,17 +72,19 @@ export function DashboardScreen() {
           <h2 className="text-[22px] font-semibold tracking-[-0.015em]"
             style={{ color: 'var(--atlas-text)' }}>Overview</h2>
           <p className="font-mono text-[12px]" style={{ color: 'var(--atlas-text-3)' }}>
-            May 13 · last 24h <Dot /> updated 6s ago
+            May 13 · last {timeRange.toLowerCase() === 'custom…' ? 'custom range' : timeRange}
+            <Dot /> updated 6s ago
           </p>
         </div>
-        <div className="flex gap-[6px]">
-          {TIME_RANGES.map((r, i) => (
+        {/* Time range — hidden on smallest screens to save space */}
+        <div className="hidden sm:flex gap-[6px]">
+          {TIME_RANGES.map((r) => (
             <button
               key={r}
-              className={`rounded-[4px] border px-2 py-[3px] font-mono text-[11.5px] transition-colors duration-[100ms] cursor-pointer
-                ${i === 0 ? 'font-medium' : ''}`}
-              style={i === 0
-                ? { background: 'var(--atlas-text)', color: 'var(--atlas-bg)', borderColor: 'var(--atlas-text)' }
+              onClick={() => setTimeRange(r)}
+              className="rounded-[4px] border px-2 py-[3px] font-mono text-[11.5px] transition-colors duration-[100ms] cursor-pointer"
+              style={r === timeRange
+                ? { background: 'var(--atlas-text)', color: 'var(--atlas-bg)', borderColor: 'var(--atlas-text)', fontWeight: 500 }
                 : { background: 'var(--atlas-surface)', color: 'var(--atlas-text-2)', borderColor: 'var(--atlas-border)' }
               }
             >{r}</button>
@@ -89,8 +92,8 @@ export function DashboardScreen() {
         </div>
       </div>
 
-      {/* KPI row */}
-      <div className="grid grid-cols-4 gap-3">
+      {/* KPI row — 2 cols on mobile, 4 on desktop */}
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <KpiCard
           label="Total transactions"
           value={totalTransactions.toLocaleString()}
@@ -117,8 +120,8 @@ export function DashboardScreen() {
         />
       </div>
 
-      {/* Hero chart + top alerts */}
-      <div className="mt-3 grid grid-cols-[2fr_1fr] gap-3">
+      {/* Hero chart + top alerts — stacked on mobile */}
+      <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-[2fr_1fr]">
         <Card>
           <CardHeader title="24-hour activity">
             <div className="flex items-center gap-[14px] font-mono text-[11px]" style={{ color: 'var(--atlas-text-2)' }}>
@@ -175,8 +178,8 @@ export function DashboardScreen() {
         </Card>
       </div>
 
-      {/* Risk distribution + recently flagged */}
-      <div className="mt-3 grid grid-cols-[1fr_1.4fr] gap-3">
+      {/* Risk distribution + recently flagged — stacked on mobile */}
+      <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-[1fr_1.4fr]">
         <Card>
           <CardHeader title="Risk score distribution">
             <span className="font-mono text-[11px]" style={{ color: 'var(--atlas-text-3)' }}>
@@ -250,14 +253,14 @@ function DashboardSkeleton() {
           <p className="font-mono text-[12px]" style={{ color: 'var(--atlas-text-3)' }}>Loading recent activity…</p>
         </div>
       </div>
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         {[0,1,2,3].map((i) => <KpiCardSkeleton key={i} />)}
       </div>
-      <div className="mt-3 grid grid-cols-[2fr_1fr] gap-3">
+      <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-[2fr_1fr]">
         <div className="animate-shimmer h-[280px] rounded-[10px]" />
         <div className="animate-shimmer h-[280px] rounded-[10px]" />
       </div>
-      <div className="mt-3 grid grid-cols-[1fr_1.4fr] gap-3">
+      <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-[1fr_1.4fr]">
         <div className="animate-shimmer h-[220px] rounded-[10px]" />
         <div className="animate-shimmer h-[220px] rounded-[10px]" />
       </div>
