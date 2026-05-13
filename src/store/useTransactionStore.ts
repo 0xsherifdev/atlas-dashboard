@@ -162,10 +162,13 @@ export const useTransactionStore = create<TransactionState>()((set, get) => ({
       _wsFlushTimer = null;
       set((s) => {
         const merged = [...pending, ...s.transactions];
-        let next = merged.slice(0, s.filters.perPage);
+        // Deduplicate: pending takes precedence; existing entry is dropped on collision
+        const seen = new Set<string>();
+        const deduped = merged.filter((t) => !seen.has(t.id) && seen.add(t.id));
+        let next = deduped.slice(0, s.filters.perPage);
         // Never drop the selected transaction off the page — it would close the drawer
         if (s.selectedId && !next.some((t) => t.id === s.selectedId)) {
-          const kept = merged.find((t) => t.id === s.selectedId);
+          const kept = deduped.find((t) => t.id === s.selectedId);
           if (kept) next = [...next.slice(0, -1), kept];
         }
         return {
