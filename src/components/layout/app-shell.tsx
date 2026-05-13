@@ -48,10 +48,7 @@ export function AppShell() {
 
           {/* Main content area */}
           <div className="relative flex-1 overflow-hidden">
-            <div
-              className={cn('h-full overflow-auto p-3 md:p-6', selectedId && 'md:pr-140')}
-              style={{ transition: 'padding-right 220ms cubic-bezier(.2,.7,.3,1)' }}
-            >
+            <div className={cn('h-full overflow-auto p-3 md:p-6', selectedId && 'md:pr-140')}>
               {view === 'dashboard'    && <DashboardScreen />}
               {view === 'transactions' && <TransactionsScreen />}
             </div>

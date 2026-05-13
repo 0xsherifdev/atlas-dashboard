@@ -160,21 +160,30 @@ export const useTransactionStore = create<TransactionState>()((set, get) => ({
     _wsFlushTimer = setTimeout(() => {
       const pending = _pendingWsTx.splice(0);
       _wsFlushTimer = null;
-      set((s) => ({
-        transactions: [...pending, ...s.transactions].slice(0, s.filters.perPage),
-        totalCount: s.totalCount + pending.length,
-        dashboard: s.dashboard
-          ? {
-              ...s.dashboard,
-              totalTransactions: s.dashboard.totalTransactions + pending.length,
-              flaggedCount:
-                s.dashboard.flaggedCount +
-                pending.filter(
-                  (t) => t.status === 'flagged' || t.status === 'blocked' || t.status === 'review'
-                ).length,
-            }
-          : s.dashboard,
-      }));
+      set((s) => {
+        const merged = [...pending, ...s.transactions];
+        let next = merged.slice(0, s.filters.perPage);
+        // Never drop the selected transaction off the page — it would close the drawer
+        if (s.selectedId && !next.some((t) => t.id === s.selectedId)) {
+          const kept = merged.find((t) => t.id === s.selectedId);
+          if (kept) next = [...next.slice(0, -1), kept];
+        }
+        return {
+          transactions: next,
+          totalCount: s.totalCount + pending.length,
+          dashboard: s.dashboard
+            ? {
+                ...s.dashboard,
+                totalTransactions: s.dashboard.totalTransactions + pending.length,
+                flaggedCount:
+                  s.dashboard.flaggedCount +
+                  pending.filter(
+                    (t) => t.status === 'flagged' || t.status === 'blocked' || t.status === 'review'
+                  ).length,
+              }
+            : s.dashboard,
+        };
+      });
     }, 2000);
   },
 
