@@ -144,7 +144,7 @@ export async function fetchCustomerHistory(txId: string): Promise<Transaction[]>
 /**
  * POST /transactions/:id/approve
  */
-export async function approveTransaction(id: string): Promise<{ success: boolean }> {
+export async function approveTransaction(_id: string): Promise<{ success: boolean }> {
   await delay(jitter(600));
   return { success: true };
 }
@@ -152,7 +152,7 @@ export async function approveTransaction(id: string): Promise<{ success: boolean
 /**
  * POST /transactions/:id/block
  */
-export async function blockTransaction(id: string): Promise<{ success: boolean }> {
+export async function blockTransaction(_id: string): Promise<{ success: boolean }> {
   await delay(jitter(600));
   return { success: true };
 }
@@ -160,7 +160,7 @@ export async function blockTransaction(id: string): Promise<{ success: boolean }
 /**
  * POST /transactions/:id/escalate
  */
-export async function escalateTransaction(id: string): Promise<{ success: boolean }> {
+export async function escalateTransaction(_id: string): Promise<{ success: boolean }> {
   await delay(jitter(400));
   return { success: true };
 }

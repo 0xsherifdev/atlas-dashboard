@@ -2,8 +2,6 @@
 
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { Sparkline } from '@/components/charts/sparkline';
-import { Skeleton } from '@/components/ui/skeleton';
-import { cn } from '@/lib/utils';
 
 type DeltaDir = 'up' | 'down' | 'flat';
 

@@ -25,6 +25,7 @@ export function DashboardScreen() {
 
   useEffect(() => {
     if (!dashboard) loadDashboard();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (dashLoading) return <DashboardSkeleton />;

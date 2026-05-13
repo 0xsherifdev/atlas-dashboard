@@ -26,13 +26,7 @@ import type {
   TransactionStatus,
   RiskLevel,
 } from '@/types';
-import {
-  CUSTOMERS,
-  MERCHANTS,
-  RISK_REASONS,
-  MOCK_NOW,
-  generateTransactions,
-} from './data';
+import { generateTransactions } from './data';
 
 type EventHandler = (event: AnyWsEvent) => void;
 

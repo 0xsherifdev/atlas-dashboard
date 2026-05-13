@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Search, ChevronLeft, ChevronRight, ChevronDown, Clock, Download, Columns, Plus, X, AlertTriangle, RefreshCw } from 'lucide-react';
 import { useTransactionStore } from '@/store/useTransactionStore';
-import { useUIStore } from '@/store/useUIStore';
 import { StatusPill, RiskPill } from '@/components/ui/status-pill';
 import { AtlasAvatar } from '@/components/ui/atlas-avatar';
 import { fmtCcy, fmtTime, cn } from '@/lib/utils';
@@ -21,27 +20,36 @@ export function TransactionsScreen() {
     setPage, clearFilters, selectTransaction,
   } = useTransactionStore();
 
-  const { dark } = useUIStore();
-
   // Track which row IDs are "new" (arrived via WS) for the flash animation
   const seenIds = useRef(new Set<string>());
-  const newIds = useRef(new Set<string>());
+  const [newIds, setNewIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     loadTransactions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Detect newly arrived transactions for row flash
   useEffect(() => {
+    const fresh = new Set<string>();
     transactions.forEach((tx) => {
       if (!seenIds.current.has(tx.id)) {
         if (seenIds.current.size > 0) {
-          newIds.current.add(tx.id);
-          setTimeout(() => newIds.current.delete(tx.id), 1500);
+          fresh.add(tx.id);
+          setTimeout(() => {
+            setNewIds((prev) => {
+              const next = new Set(prev);
+              next.delete(tx.id);
+              return next;
+            });
+          }, 1500);
         }
         seenIds.current.add(tx.id);
       }
     });
+    if (fresh.size > 0) {
+      setNewIds((prev) => new Set([...prev, ...fresh]));
+    }
   }, [transactions]);
 
   const filterCount = filters.statuses.size + filters.risks.size + (filters.search ? 1 : 0);
@@ -67,7 +75,7 @@ export function TransactionsScreen() {
             <AlertTriangle size={18} />
           </div>
           <h3 className="mb-1 text-[15px] font-semibold" style={{ color: 'var(--atlas-text)' }}>
-            Couldn't load transactions
+            Couldn&apos;t load transactions
           </h3>
           <p className="mb-4 text-[13px]" style={{ color: 'var(--atlas-text-3)' }}>
             The ledger service is unreachable.
@@ -204,7 +212,7 @@ export function TransactionsScreen() {
           >
             {transactions.map((tx) => {
               const isSelected = selectedId === tx.id;
-              const isNew = newIds.current.has(tx.id);
+              const isNew = newIds.has(tx.id);
               return (
                 <button
                   key={tx.id}
@@ -290,7 +298,7 @@ export function TransactionsScreen() {
               </thead>
               <tbody>
                 {transactions.map((tx) => {
-                  const isNew = newIds.current.has(tx.id);
+                  const isNew = newIds.has(tx.id);
                   const isSelected = selectedId === tx.id;
                   return (
                     <tr

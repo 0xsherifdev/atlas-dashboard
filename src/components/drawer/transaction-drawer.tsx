@@ -99,14 +99,14 @@ function DrawerContent({
     if (tab === 'timeline' && !timeline) {
       fetchTimeline(tx.id).then(setTimeline);
     }
-  }, [tab, tx.id]);
+  }, [tab, tx.id, timeline]);
 
   // Lazy-load history
   useEffect(() => {
     if (tab === 'history' && !history) {
       fetchCustomerHistory(tx.id).then(setHistory);
     }
-  }, [tab, tx.id]);
+  }, [tab, tx.id, history]);
 
   const handleAction = async (action: 'approve' | 'block' | 'escalate') => {
     const label = action === 'approve' ? 'Approved' : action === 'block' ? 'Blocked' : 'Escalated';

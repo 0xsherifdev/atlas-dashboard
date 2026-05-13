@@ -25,7 +25,7 @@ let _loadId = 0;
 
 // Buffer WS-inserted transactions and apply after a short delay so
 // rows don't shuffle while the user is in the middle of clicking.
-let _pendingWsTx: Transaction[] = [];
+const _pendingWsTx: Transaction[] = [];
 let _wsFlushTimer: ReturnType<typeof setTimeout> | null = null;
 let _searchTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -129,7 +129,7 @@ export const useTransactionStore = create<TransactionState>()((set, get) => ({
   toggleStatus: (status) => {
     set((s) => {
       const next = new Set(s.filters.statuses);
-      next.has(status) ? next.delete(status) : next.add(status);
+      if (next.has(status)) next.delete(status); else next.add(status);
       return { filters: { ...s.filters, statuses: next, page: 1 } };
     });
     get().loadTransactions();
@@ -138,14 +138,14 @@ export const useTransactionStore = create<TransactionState>()((set, get) => ({
   toggleRisk: (risk) => {
     set((s) => {
       const next = new Set(s.filters.risks);
-      next.has(risk) ? next.delete(risk) : next.add(risk);
+      if (next.has(risk)) next.delete(risk); else next.add(risk);
       return { filters: { ...s.filters, risks: next, page: 1 } };
     });
     get().loadTransactions();
   },
 
   setPage: (page) => {
-    set((s) => ({ filters: { ...s.filters, page } }));
+    set((s) => ({ filters: { ...s.filters, page }, selectedId: null }));
     get().loadTransactions();
   },
 

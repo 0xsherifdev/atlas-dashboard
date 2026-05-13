@@ -34,7 +34,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     if (!signedIn) return;
     wsService.knownIds = MOCK_DATA.transactions.map((t) => t.id);
     connect();
-  }, [signedIn]);
+  }, [signedIn, connect]);
 
   // Keep wsService.knownIds in sync as new transactions arrive
   useEffect(() => {

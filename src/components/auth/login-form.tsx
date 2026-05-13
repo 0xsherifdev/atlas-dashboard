@@ -67,7 +67,7 @@ export function LoginForm() {
 
       {/* Card */}
       <div
-        className="relative z-10 w-full max-w-[400px] rounded-[14px] px-9 py-9 pb-8"
+        className="relative z-10 w-full max-w-100 rounded-[14px] px-9 py-9 pb-8"
         style={{
           background: 'var(--atlas-surface)',
           border: '1px solid var(--atlas-border)',
@@ -75,14 +75,14 @@ export function LoginForm() {
         }}
       >
         {/* Brand */}
-        <div className="mb-6 flex items-center gap-[9px]">
+        <div className="mb-6 flex items-center gap-2.25">
           <AtlasMark variant="on-blue" size={26} tile tileRadius={6} />
           <span className="text-[15px] font-semibold tracking-[-0.01em]"
             style={{ color: 'var(--atlas-text)' }}>
             Atlas Monitor
           </span>
           <span
-            className="ml-auto rounded-[3px] px-[6px] py-px font-mono text-[10.5px]"
+            className="ml-auto rounded-[3px] px-1.5 py-px font-mono text-[10.5px]"
             style={{ background: 'var(--atlas-surface-2)', color: 'var(--atlas-text-3)' }}
           >v3.4</span>
         </div>
@@ -97,7 +97,7 @@ export function LoginForm() {
 
         <form onSubmit={handleSubmit} noValidate>
           {/* Email */}
-          <div className="mb-3 flex flex-col gap-[6px]">
+          <div className="mb-3 flex flex-col gap-1.5">
             <label htmlFor="email"
               className="font-mono text-[11px] uppercase tracking-[.06em]"
               style={{ color: 'var(--atlas-text-2)' }}>
@@ -111,8 +111,8 @@ export function LoginForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className={cn(
-                'h-[38px] w-full rounded-[7px] border px-3 text-[13.5px] outline-none',
-                'transition-all duration-[120ms]',
+                'h-9.5 w-full rounded-[7px] border px-3 text-[13.5px] outline-none',
+                'transition-all duration-120',
                 'focus:shadow-[0_0_0_3px_color-mix(in_srgb,#3b82f6_18%,transparent)]',
                 fieldErrors.email ? 'border-(--atlas-status-err)' : 'border-(--atlas-border-2)',
               )}
@@ -130,7 +130,7 @@ export function LoginForm() {
           </div>
 
           {/* Password */}
-          <div className="mb-4 flex flex-col gap-[6px]">
+          <div className="mb-4 flex flex-col gap-1.5">
             <label
               htmlFor="password"
               className="flex items-center justify-between font-mono text-[11px] uppercase tracking-[.06em]"
