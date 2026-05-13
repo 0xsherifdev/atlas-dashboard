@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <title>Atlas — app icon (squircle)</title>
+  <defs>
+    <clipPath id="squircle">
+      <path d="M512,0 C896,0 1024,128 1024,512 C1024,896 896,1024 512,1024 C128,1024 0,896 0,512 C0,128 128,0 512,0 Z"></path>
+    </clipPath>
+  </defs>
+  <g clip-path="url(#squircle)">
+    <rect width="1024" height="1024" fill="#0E0E10"></rect>
+    <g transform="translate(212,212) scale(6.0)">
+      <path fill="#F4F2EC" fill-rule="evenodd" d="M 38 8 L 62 8 L 76 54 L 24 54 Z M 50 23 L 64.5 49 L 35.5 49 Z"></path>
+      <path fill="#F4F2EC" d="M 22.2 61 L 39.5 61 L 32.5 92 L 9 92 Z"></path>
+      <path fill="#F4F2EC" d="M 60.5 61 L 77.8 61 L 91 92 L 67.5 92 Z"></path>
+    </g>
+  </g>
+</svg>
