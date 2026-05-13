@@ -9,6 +9,8 @@ import { StatusPill, RiskPill } from '@/components/ui/status-pill';
 import { AtlasAvatar } from '@/components/ui/atlas-avatar';
 import { RiskMeter } from '@/components/charts/risk-meter';
 import { fmtCcy, fmtDateTime, fmtTime, fmtTimeOnly } from '@/lib/utils';
+import { IconButton } from '@/components/ui/icon-button';
+import { Chip } from '@/components/ui/chip';
 import type { Transaction, TimelineEvent } from '@/types';
 
 type Tab = 'overview' | 'indicators' | 'history' | 'timeline';
@@ -56,6 +58,9 @@ export function TransactionDrawer() {
 
       {/* Drawer panel */}
       <div
+        role="dialog"
+        aria-label={`Transaction ${tx.id} details`}
+        aria-modal={isMobile}
         className={isMobile
           ? 'animate-slide-in-up fixed bottom-0 left-0 right-0 z-50 flex flex-col rounded-t-[20px] border-t'
           : 'animate-slide-in-right fixed bottom-0 right-0 top-0 z-50 flex w-[560px] flex-col border-l'
@@ -134,9 +139,9 @@ function DrawerContent({
           <span style={{ color: 'var(--atlas-text-4)' }}>·</span>
           <span className="font-mono text-[12px]" style={{ color: 'var(--atlas-text-3)' }}>{tx.ref}</span>
           <div className="flex-1" />
-          <IconBtn title="Copy link"><ExternalLink size={13} /></IconBtn>
-          <IconBtn title="More"><MoreHorizontal size={13} /></IconBtn>
-          <IconBtn onClick={onClose} title="Close · Esc"><X size={13} /></IconBtn>
+          <IconButton size="sm" title="Copy link"><ExternalLink size={13} /></IconButton>
+          <IconButton size="sm" title="More"><MoreHorizontal size={13} /></IconButton>
+          <IconButton size="sm" onClick={onClose} title="Close · Esc"><X size={13} /></IconButton>
         </div>
 
         {/* Amount row */}
@@ -559,27 +564,6 @@ function StatusTag({ severity }: { severity: string }) {
   );
 }
 
-function Chip({ label }: { label: string }) {
-  return (
-    <button
-      className="rounded-[4px] border px-2 py-[3px] font-mono text-[11.5px] transition-colors cursor-pointer"
-      style={{ background: 'var(--atlas-surface)', borderColor: 'var(--atlas-border)', color: 'var(--atlas-text-2)' }}
-    >{label}</button>
-  );
-}
-
-function IconBtn({ children, onClick, title }: { children: React.ReactNode; onClick?: () => void; title?: string }) {
-  return (
-    <button
-      onClick={onClick}
-      title={title}
-      className="inline-grid h-7 w-7 place-items-center rounded-[6px] border transition-colors cursor-pointer"
-      style={{ background: 'var(--atlas-surface)', borderColor: 'var(--atlas-border)', color: 'var(--atlas-text-2)' }}
-      onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--atlas-hover)'; e.currentTarget.style.color = 'var(--atlas-text)'; }}
-      onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--atlas-surface)'; e.currentTarget.style.color = 'var(--atlas-text-2)'; }}
-    >{children}</button>
-  );
-}
 
 function ActionBtn({
   label, icon, primary, danger, onClick,

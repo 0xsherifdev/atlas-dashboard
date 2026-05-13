@@ -134,8 +134,8 @@ describe('login', () => {
     expect(result.user.name).toBeTruthy();
   });
 
-  it('throws on password "wrong"', async () => {
-    await expect(login('test@example.com', 'wrong')).rejects.toThrow(
+  it('throws on password "wrongpass"', async () => {
+    await expect(login('test@example.com', 'wrongpass')).rejects.toThrow(
       'Invalid credentials'
     );
   });

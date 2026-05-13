@@ -46,11 +46,7 @@ export function Sidebar() {
 
   return (
     <aside
-      className="flex h-full w-[220px] shrink-0 flex-col gap-6 border-r px-3 py-4"
-      style={{
-        background: 'var(--atlas-surface)',
-        borderColor: 'var(--atlas-border)',
-      }}
+      className="flex h-full w-[220px] shrink-0 flex-col gap-6 border-r px-3 py-4 bg-(--atlas-surface) border-(--atlas-border)"
     >
       {/* Logo */}
       <div className="flex items-center gap-2 px-2 pt-1">
@@ -102,7 +98,7 @@ export function Sidebar() {
       {/* Live status */}
       <div
         className="flex items-center gap-2 rounded-[6px] px-[10px] py-2 font-mono text-[11px]"
-        style={{ background: 'var(--atlas-surface-2)', color: 'var(--atlas-text-2)' }}
+        style={{ background: 'var(--atlas-surface-2)' }}
       >
         <span
           className={cn(
@@ -137,30 +133,13 @@ function NavButton({
       onClick={onClick}
       disabled={item.disabled}
       className={cn(
-        'flex w-full items-center gap-[9px] rounded-[6px] px-[10px] py-[7px] text-left text-[13.5px]',
+        'flex w-full items-center gap-[9px] rounded-[6px] px-[10px] py-[7px] text-left text-[13.5px] border-none',
         'transition-[background,color] duration-[120ms]',
         'disabled:cursor-default disabled:opacity-40',
         active
-          ? 'font-medium'
-          : 'cursor-pointer',
+          ? 'bg-(--atlas-selected) text-(--atlas-text) font-medium'
+          : 'bg-transparent text-(--atlas-text-2) cursor-pointer hover:bg-(--atlas-hover) hover:text-(--atlas-text)',
       )}
-      style={{
-        background: active ? 'var(--atlas-selected)' : 'transparent',
-        color: active ? 'var(--atlas-text)' : 'var(--atlas-text-2)',
-        border: 'none',
-      }}
-      onMouseEnter={(e) => {
-        if (!active && !item.disabled) {
-          e.currentTarget.style.background = 'var(--atlas-hover)';
-          e.currentTarget.style.color = 'var(--atlas-text)';
-        }
-      }}
-      onMouseLeave={(e) => {
-        if (!active) {
-          e.currentTarget.style.background = 'transparent';
-          e.currentTarget.style.color = 'var(--atlas-text-2)';
-        }
-      }}
     >
       <span className="flex-shrink-0">{item.icon}</span>
       <span className="flex-1">{item.label}</span>

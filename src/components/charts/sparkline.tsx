@@ -1,5 +1,7 @@
 'use client';
 
+import { memo } from 'react';
+
 interface SparklineProps {
   data: number[];
   color: string;
@@ -8,7 +10,7 @@ interface SparklineProps {
   height?: number;
 }
 
-export function Sparkline({ data, color, dark = true, width = 110, height = 32 }: SparklineProps) {
+export const Sparkline = memo(function Sparkline({ data, color, dark = true, width = 110, height = 32 }: SparklineProps) {
   const w = width;
   const h = height;
   const min = Math.min(...data);
@@ -38,4 +40,4 @@ export function Sparkline({ data, color, dark = true, width = 110, height = 32 }
       <circle cx={last[0]} cy={last[1]} r="1.8" fill={color} />
     </svg>
   );
-}
+});

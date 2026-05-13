@@ -239,15 +239,12 @@ export function LoginForm() {
             <button
               key={label}
               type="button"
-              className="flex flex-1 items-center justify-center gap-[6px] rounded-[6px] text-[13px] font-medium h-9 transition-colors duration-[120ms]"
-              style={{
-                background: 'var(--atlas-surface)',
-                color: 'var(--atlas-text)',
-                border: '1px solid var(--atlas-border)',
-                cursor: 'pointer',
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--atlas-hover)')}
-              onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--atlas-surface)')}
+              title="Coming soon"
+              className={cn(
+                'flex flex-1 items-center justify-center gap-[6px] rounded-[6px] text-[13px] font-medium h-9',
+                'border border-(--atlas-border) bg-(--atlas-surface) text-(--atlas-text)',
+                'hover:bg-(--atlas-hover) transition-colors duration-[120ms] cursor-pointer',
+              )}
             >
               {icon}{label}
             </button>
@@ -260,7 +257,7 @@ export function LoginForm() {
           <code
             className="rounded-[3px] px-[5px] py-px"
             style={{ background: 'var(--atlas-surface-2)' }}
-          >wrong</code>
+          >wrongpass</code>
           {' '}as the password to see the error state.
         </p>
       </div>

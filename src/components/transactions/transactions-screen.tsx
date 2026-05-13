@@ -6,6 +6,7 @@ import { useTransactionStore } from '@/store/useTransactionStore';
 import { StatusPill, RiskPill } from '@/components/ui/status-pill';
 import { AtlasAvatar } from '@/components/ui/atlas-avatar';
 import { fmtCcy, fmtTime, cn } from '@/lib/utils';
+import { Chip } from '@/components/ui/chip';
 import type { TransactionStatus, RiskLevel } from '@/types';
 
 const STATUSES: TransactionStatus[] = ['completed', 'flagged', 'review', 'blocked', 'pending'];
@@ -303,7 +304,9 @@ export function TransactionsScreen() {
                   return (
                     <tr
                       key={tx.id}
+                      tabIndex={0}
                       onClick={() => selectTransaction(isSelected ? null : tx.id)}
+                      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectTransaction(isSelected ? null : tx.id); } }}
                       className={cn(isNew && 'animate-row-flash')}
                       style={{
                         cursor: 'pointer',
@@ -501,18 +504,6 @@ function Btn({ icon, label, primary = false, suffix }: { icon: React.ReactNode; 
   );
 }
 
-function Chip({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
-  return (
-    <button
-      onClick={onClick}
-      className="cursor-pointer rounded-[4px] border px-2 py-[3px] font-mono text-[11.5px] tracking-[.02em] transition-colors duration-[100ms]"
-      style={active
-        ? { background: 'var(--atlas-text)', color: 'var(--atlas-bg)', borderColor: 'var(--atlas-text)' }
-        : { background: 'var(--atlas-surface)', color: 'var(--atlas-text-2)', borderColor: 'var(--atlas-border)' }
-      }
-    >{label}</button>
-  );
-}
 
 function Divider() {
   return <div className="h-[18px] w-px" style={{ background: 'var(--atlas-border-2)' }} />;

@@ -7,6 +7,7 @@ import { useTransactionStore } from '@/store/useTransactionStore';
 import { initials } from '@/lib/utils';
 import { useAuthStore } from '@/store/useAuthStore';
 import { AtlasMark } from '@/components/ui/atlas-mark';
+import { IconButton } from '@/components/ui/icon-button';
 
 export function Topbar() {
   const pathname = usePathname();
@@ -128,35 +129,3 @@ export function Topbar() {
   );
 }
 
-function IconButton({
-  onClick,
-  title,
-  children,
-}: {
-  onClick?: () => void;
-  title?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      title={title}
-      className="relative inline-grid h-8 w-8 place-items-center rounded-[6px] border transition-[background,color] duration-[120ms] cursor-pointer"
-      style={{
-        background: 'var(--atlas-surface)',
-        borderColor: 'var(--atlas-border)',
-        color: 'var(--atlas-text-2)',
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.background = 'var(--atlas-hover)';
-        e.currentTarget.style.color = 'var(--atlas-text)';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.background = 'var(--atlas-surface)';
-        e.currentTarget.style.color = 'var(--atlas-text-2)';
-      }}
-    >
-      {children}
-    </button>
-  );
-}

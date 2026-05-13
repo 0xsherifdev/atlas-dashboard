@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { riskBarColor } from '@/lib/utils';
 
 interface RiskMeterProps {
@@ -8,7 +9,7 @@ interface RiskMeterProps {
   size?: number;
 }
 
-export function RiskMeter({ score, dark = true, size = 64 }: RiskMeterProps) {
+export const RiskMeter = memo(function RiskMeter({ score, dark = true, size = 64 }: RiskMeterProps) {
   const r = size / 2 - 4;
   const c = size / 2;
   const circumference = Math.PI * r;
@@ -43,4 +44,4 @@ export function RiskMeter({ score, dark = true, size = 64 }: RiskMeterProps) {
       />
     </svg>
   );
-}
+});

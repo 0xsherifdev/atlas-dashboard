@@ -176,7 +176,7 @@ export async function login(
 ): Promise<{ token: string; user: { name: string; role: string } }> {
   await delay(jitter(900));
 
-  if (password === 'wrong') {
+  if (password === 'wrongpass') {
     throw new Error('Invalid credentials. Try again or use SSO.');
   }
 

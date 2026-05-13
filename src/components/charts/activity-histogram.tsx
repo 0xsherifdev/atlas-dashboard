@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import type { ActivityBin } from '@/types';
 
 interface ActivityHistogramProps {
@@ -9,7 +9,7 @@ interface ActivityHistogramProps {
   dark?: boolean;
 }
 
-export function ActivityHistogram({ bins, accent = '#3b82f6', dark = true }: ActivityHistogramProps) {
+export const ActivityHistogram = memo(function ActivityHistogram({ bins, accent = '#3b82f6', dark = true }: ActivityHistogramProps) {
   const w = 720, h = 220;
   const pad = { t: 24, r: 16, b: 28, l: 36 };
   const innerW = w - pad.l - pad.r;
@@ -120,4 +120,4 @@ export function ActivityHistogram({ bins, accent = '#3b82f6', dark = true }: Act
       })()}
     </div>
   );
-}
+});

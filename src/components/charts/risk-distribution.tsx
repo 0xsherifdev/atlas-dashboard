@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import type { RiskBucket } from '@/types';
 
 interface RiskDistributionProps {
@@ -7,7 +8,7 @@ interface RiskDistributionProps {
   dark?: boolean;
 }
 
-export function RiskDistribution({ buckets, dark = true }: RiskDistributionProps) {
+export const RiskDistribution = memo(function RiskDistribution({ buckets, dark = true }: RiskDistributionProps) {
   const w = 360, h = 140;
   const pad = { t: 12, r: 12, b: 26, l: 24 };
   const innerW = w - pad.l - pad.r;
@@ -63,4 +64,4 @@ export function RiskDistribution({ buckets, dark = true }: RiskDistributionProps
       ))}
     </svg>
   );
-}
+});

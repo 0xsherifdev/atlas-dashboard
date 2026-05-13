@@ -9,6 +9,7 @@ import { KpiCard, KpiCardSkeleton } from './kpi-card';
 import { ActivityHistogram } from '@/components/charts/activity-histogram';
 import { RiskDistribution } from '@/components/charts/risk-distribution';
 import { RiskPill } from '@/components/ui/status-pill';
+import { Card, CardHeader } from '@/components/ui/card';
 import { AtlasAvatar } from '@/components/ui/atlas-avatar';
 import { fmtCcy, fmtTime } from '@/lib/utils';
 
@@ -272,27 +273,6 @@ function DashboardSkeleton() {
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function Card({ children }: { children: React.ReactNode }) {
-  return (
-    <div
-      className="rounded-[10px] border p-4"
-      style={{ background: 'var(--atlas-surface)', borderColor: 'var(--atlas-border)' }}
-    >{children}</div>
-  );
-}
-
-function CardHeader({ title, children }: { title: string; children?: React.ReactNode }) {
-  return (
-    <div className="mb-3 flex flex-wrap items-baseline justify-between gap-y-1">
-      <h3 className="font-mono text-[12px] font-semibold uppercase tracking-[.06em]"
-        style={{ color: 'var(--atlas-text-2)' }}>
-        {title}
-      </h3>
-      {children}
-    </div>
-  );
-}
 
 function LegendItem({ color, label }: { color: string; label: string }) {
   return (
