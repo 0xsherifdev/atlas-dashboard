@@ -46,15 +46,7 @@ export const useAuthStore = create<AuthState>()(
       },
 
       clearError: () => set({ error: null }),
-      setHasHydrated: (v) =>
-        set((s) => ({
-          _hasHydrated: v,
-          // Migrate the old hardcoded demo name that may be in localStorage
-          user:
-            s.user?.name === 'Tolu Adesina'
-              ? { name: 'Sherifdeen Adebayo', role: 'Senior Analyst' }
-              : s.user,
-        })),
+      setHasHydrated: (v) => set({ _hasHydrated: v }),
     }),
     {
       name: 'atlas-auth',

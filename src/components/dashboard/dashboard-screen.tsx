@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { RefreshCw, AlertTriangle } from 'lucide-react';
 import { useTransactionStore } from '@/store/useTransactionStore';
 import { useUIStore } from '@/store/useUIStore';
@@ -18,7 +19,8 @@ const TIME_RANGES: TimeRange[] = ['24H', '7D', '30D', 'Custom…'];
 
 export function DashboardScreen() {
   const { dashboard, dashLoading, dashError, loadDashboard } = useTransactionStore();
-  const { dark, setView } = useUIStore();
+  const { dark } = useUIStore();
+  const router = useRouter();
   const [timeRange, setTimeRange] = useState<TimeRange>('24H');
 
   useEffect(() => {
@@ -199,7 +201,7 @@ export function DashboardScreen() {
         <Card>
           <CardHeader title="Recently flagged">
             <button
-              onClick={() => setView('transactions')}
+              onClick={() => router.push('/transactions')}
               className="font-mono text-[11.5px] transition-colors"
               style={{ color: 'var(--atlas-text-2)', background: 'none', border: 'none', cursor: 'pointer' }}
             >
@@ -212,7 +214,7 @@ export function DashboardScreen() {
                 key={tx.id}
                 className="flex cursor-pointer items-center gap-3 border-b py-2 transition-colors duration-[80ms]"
                 style={{ borderColor: 'var(--atlas-border)' }}
-                onClick={() => setView('transactions')}
+                onClick={() => router.push('/transactions')}
               >
                 <AtlasAvatar name={tx.customer.name} id={tx.customer.id} size="md" />
                 <div className="min-w-0 flex-1">

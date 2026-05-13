@@ -1,5 +1,6 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
 import { Search, Sun, Moon, RefreshCw, Bell } from 'lucide-react';
 import { useUIStore } from '@/store/useUIStore';
 import { useTransactionStore } from '@/store/useTransactionStore';
@@ -8,7 +9,8 @@ import { useAuthStore } from '@/store/useAuthStore';
 import { AtlasMark } from '@/components/ui/atlas-mark';
 
 export function Topbar() {
-  const { dark, toggleTheme, view } = useUIStore();
+  const pathname = usePathname();
+  const { dark, toggleTheme } = useUIStore();
   const { loadDashboard, loadTransactions } = useTransactionStore();
   const { user } = useAuthStore();
 
@@ -19,7 +21,7 @@ export function Topbar() {
 
   const name = user?.name ?? 'Sherifdeen Adebayo';
   const role = user?.role ?? 'Senior Analyst';
-  const pageTitle = view === 'dashboard' ? 'Overview' : 'Transactions';
+  const pageTitle = pathname === '/transactions' ? 'Transactions' : 'Overview';
 
   return (
     <div

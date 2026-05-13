@@ -1,0 +1,9 @@
+node_modules
+.next
+.git
+.gitignore
+README.md
+IMPROVEMENTS.md
+CLAUDE.md
+AGENTS.md
+*.log

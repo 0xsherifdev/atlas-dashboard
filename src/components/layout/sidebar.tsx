@@ -1,5 +1,6 @@
 'use client';
 
+import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard,
   ArrowLeftRight,
@@ -10,13 +11,12 @@ import {
   Settings,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useUIStore, type ActiveView } from '@/store/useUIStore';
 import { useTransactionStore } from '@/store/useTransactionStore';
 import { useWebSocketStore } from '@/store/useWebSocketStore';
 import { AtlasMark } from '@/components/ui/atlas-mark';
 
 interface NavItem {
-  id?: ActiveView;
+  href?: string;
   label: string;
   icon: React.ReactNode;
   badge?: number;
@@ -24,15 +24,16 @@ interface NavItem {
 }
 
 export function Sidebar() {
-  const { view, setView } = useUIStore();
+  const pathname = usePathname();
+  const router = useRouter();
   const { dashboard } = useTransactionStore();
   const { connected, latency } = useWebSocketStore();
 
   const flaggedCount = dashboard?.flaggedCount ?? 0;
 
   const monitorItems: NavItem[] = [
-    { id: 'dashboard',    label: 'Dashboard',    icon: <LayoutDashboard size={14} /> },
-    { id: 'transactions', label: 'Transactions', icon: <ArrowLeftRight size={14} />, badge: flaggedCount > 0 ? flaggedCount : undefined },
+    { href: '/dashboard',    label: 'Dashboard',    icon: <LayoutDashboard size={14} /> },
+    { href: '/transactions', label: 'Transactions', icon: <ArrowLeftRight size={14} />, badge: flaggedCount > 0 ? flaggedCount : undefined },
     { label: 'Customers', icon: <Users size={14} />, disabled: true },
     { label: 'Alerts',    icon: <BellRing size={14} />, disabled: true },
   ];
@@ -75,8 +76,8 @@ export function Sidebar() {
             <NavButton
               key={item.label}
               item={item}
-              active={item.id === view}
-              onClick={item.id && !item.disabled ? () => setView(item.id!) : undefined}
+              active={item.href === pathname}
+              onClick={item.href && !item.disabled ? () => router.push(item.href!) : undefined}
             />
           ))}
         </nav>

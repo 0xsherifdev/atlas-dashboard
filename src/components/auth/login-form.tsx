@@ -1,14 +1,15 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, ShieldCheck, KeyRound, AlertTriangle } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { AtlasMark } from '@/components/ui/atlas-mark';
 
 export function LoginForm() {
   const { signIn, loading, error, clearError } = useAuthStore();
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPw, setShowPw] = useState(false);
@@ -29,6 +30,10 @@ export function LoginForm() {
     clearError();
     if (!validate()) return;
     await signIn(email, password);
+    // Navigate on success — signIn sets signedIn to true, error stays null
+    if (!useAuthStore.getState().error) {
+      router.push('/dashboard');
+    }
   };
 
   return (

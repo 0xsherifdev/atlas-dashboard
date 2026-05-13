@@ -167,7 +167,6 @@ export function generateTransactions(n = 84, seedOffset = 0): Transaction[] {
     const ts = MOCK_NOW - hoursBack * 3600 * 1000;
     const direction = rng() > 0.35 ? 'out' : 'in';
 
-    const methods: string[] = ['NIP Transfer', 'Card', 'USSD', 'POS'];
     const method = rng() > 0.5 ? 'NIP Transfer' : rng() > 0.4 ? 'Card' : rng() > 0.5 ? 'USSD' : 'POS';
 
     list.push({

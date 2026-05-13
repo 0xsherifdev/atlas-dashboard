@@ -1,26 +1,27 @@
 'use client';
 
+import { usePathname, useRouter } from 'next/navigation';
 import { LayoutDashboard, ArrowLeftRight, AlertTriangle, User } from 'lucide-react';
-import { useUIStore, type ActiveView } from '@/store/useUIStore';
 import { useTransactionStore } from '@/store/useTransactionStore';
 
 interface NavItem {
-  id: ActiveView | null;
+  href: string | null;
   label: string;
   icon: React.ReactNode;
   badge?: number;
 }
 
 export function BottomNav() {
-  const { view, setView } = useUIStore();
+  const pathname = usePathname();
+  const router = useRouter();
   const { dashboard } = useTransactionStore();
   const flaggedCount = dashboard?.flaggedCount ?? 0;
 
   const items: NavItem[] = [
-    { id: 'dashboard',    label: 'HOME',   icon: <LayoutDashboard size={20} /> },
-    { id: 'transactions', label: 'TXNS',   icon: <ArrowLeftRight size={20} />, badge: flaggedCount > 0 ? flaggedCount : undefined },
-    { id: null,           label: 'ALERTS', icon: <AlertTriangle size={20} /> },
-    { id: null,           label: 'ME',     icon: <User size={20} /> },
+    { href: '/dashboard',    label: 'HOME',   icon: <LayoutDashboard size={20} /> },
+    { href: '/transactions', label: 'TXNS',   icon: <ArrowLeftRight size={20} />, badge: flaggedCount > 0 ? flaggedCount : undefined },
+    { href: null,            label: 'ALERTS', icon: <AlertTriangle size={20} /> },
+    { href: null,            label: 'ME',     icon: <User size={20} /> },
   ];
 
   return (
@@ -28,11 +29,11 @@ export function BottomNav() {
       className="flex border-t"
       style={{ background: 'var(--atlas-surface)', borderColor: 'var(--atlas-border)' }}
     >
-      {items.map(({ id, label, icon, badge }) => (
+      {items.map(({ href, label, icon, badge }) => (
         <button
           key={label}
-          onClick={id ? () => setView(id) : undefined}
-          disabled={!id}
+          onClick={href ? () => router.push(href) : undefined}
+          disabled={!href}
           style={{
             flex: 1,
             display: 'flex',
@@ -43,9 +44,9 @@ export function BottomNav() {
             paddingBottom: 10,
             background: 'transparent',
             border: 'none',
-            cursor: id ? 'pointer' : 'default',
-            color: view === id ? 'var(--atlas-text)' : 'var(--atlas-text-3)',
-            opacity: !id ? 0.4 : 1,
+            cursor: href ? 'pointer' : 'default',
+            color: pathname === href ? 'var(--atlas-text)' : 'var(--atlas-text-3)',
+            opacity: !href ? 0.4 : 1,
             fontFamily: "'Geist Mono', ui-monospace, Menlo, monospace",
             fontSize: 9,
             fontWeight: 600,

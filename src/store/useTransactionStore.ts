@@ -27,6 +27,7 @@ let _loadId = 0;
 // rows don't shuffle while the user is in the middle of clicking.
 let _pendingWsTx: Transaction[] = [];
 let _wsFlushTimer: ReturnType<typeof setTimeout> | null = null;
+let _searchTimer: ReturnType<typeof setTimeout> | null = null;
 
 interface TransactionState {
   // ── Fetched data ────────────────────────────────────────────────────────────
@@ -117,7 +118,12 @@ export const useTransactionStore = create<TransactionState>()((set, get) => ({
 
   setSearch: (q) => {
     set((s) => ({ filters: { ...s.filters, search: q, page: 1 } }));
-    get().loadTransactions();
+    // Debounce the API call — 300ms avoids hammering on every keystroke
+    if (_searchTimer) clearTimeout(_searchTimer);
+    _searchTimer = setTimeout(() => {
+      _searchTimer = null;
+      get().loadTransactions();
+    }, 300);
   },
 
   toggleStatus: (status) => {
