@@ -13,6 +13,7 @@ import { useWebSocketStore } from '@/store/useWebSocketStore';
 import { useTransactionStore } from '@/store/useTransactionStore';
 import { wsService } from '@/lib/mock/websocket';
 import { MOCK_DATA } from '@/lib/mock/data';
+import { cn } from '@/lib/utils';
 
 export function AppShell() {
   const { dark, view } = useUIStore();
@@ -34,7 +35,7 @@ export function AppShell() {
   return (
     <div
       className={dark ? 'dark' : ''}
-      style={{ height: '100dvh', background: 'var(--atlas-bg)' }}
+      style={{ height: '100dvh', background: 'var(--atlas-bg)', color: 'var(--atlas-text)' }}
     >
       <div className="flex h-full">
         {/* Sidebar: desktop only */}
@@ -47,7 +48,10 @@ export function AppShell() {
 
           {/* Main content area */}
           <div className="relative flex-1 overflow-hidden">
-            <div className="h-full overflow-auto p-3 md:p-6">
+            <div
+              className={cn('h-full overflow-auto p-3 md:p-6', selectedId && 'md:pr-140')}
+              style={{ transition: 'padding-right 220ms cubic-bezier(.2,.7,.3,1)' }}
+            >
               {view === 'dashboard'    && <DashboardScreen />}
               {view === 'transactions' && <TransactionsScreen />}
             </div>

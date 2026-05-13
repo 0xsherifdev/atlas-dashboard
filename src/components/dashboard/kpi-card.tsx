@@ -58,7 +58,9 @@ export function KpiCard({ label, value, delta, deltaDir, sub, spark, sparkColor,
             <span style={{ color: 'var(--atlas-text-3)' }}>{sub}</span>
           )}
         </span>
-        <Sparkline data={spark} color={sparkColor} dark={dark} />
+        <div className="w-[110px] min-w-[40px] shrink">
+          <Sparkline data={spark} color={sparkColor} dark={dark} />
+        </div>
       </div>
     </div>
   );

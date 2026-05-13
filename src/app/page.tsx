@@ -15,7 +15,7 @@ export default function Home() {
 
   if (!signedIn) {
     return (
-      <div className={dark ? 'dark' : ''} style={{ height: '100dvh', background: 'var(--atlas-bg)' }}>
+      <div className={dark ? 'dark' : ''} style={{ height: '100dvh', background: 'var(--atlas-bg)', color: 'var(--atlas-text)' }}>
         <LoginForm />
       </div>
     );

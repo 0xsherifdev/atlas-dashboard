@@ -44,12 +44,15 @@ export function TransactionDrawer() {
 
   return (
     <>
-      {/* Overlay — fixed over entire viewport */}
-      <div
-        className="animate-fade-in fixed inset-0 z-40"
-        style={{ background: 'rgba(0,0,0,.32)' }}
-        onClick={() => selectTransaction(null)}
-      />
+      {/* Overlay — mobile only. On desktop the content area shrinks to avoid
+          the panel; close via X button or Escape. */}
+      {isMobile && (
+        <div
+          className="animate-fade-in fixed inset-0 z-40"
+          style={{ background: 'rgba(0,0,0,.32)' }}
+          onClick={() => selectTransaction(null)}
+        />
+      )}
 
       {/* Drawer panel */}
       <div
@@ -70,7 +73,7 @@ export function TransactionDrawer() {
             <div className="h-1 w-10 rounded-full" style={{ background: 'var(--atlas-border-2)' }} />
           </div>
         )}
-        <DrawerContent tx={tx} dark={dark} onClose={() => selectTransaction(null)} onSelectTx={selectTransaction} />
+        <DrawerContent key={tx.id} tx={tx} dark={dark} onClose={() => selectTransaction(null)} onSelectTx={selectTransaction} />
       </div>
     </>
   );
@@ -90,9 +93,6 @@ function DrawerContent({
   const [timeline, setTimeline] = useState<TimelineEvent[] | null>(null);
   const [history, setHistory] = useState<Transaction[] | null>(null);
   const [actionMsg, setActionMsg] = useState<string | null>(null);
-
-  // Reset tab when tx changes
-  useEffect(() => { setTab('overview'); setTimeline(null); setHistory(null); }, [tx.id]);
 
   // Lazy-load timeline
   useEffect(() => {

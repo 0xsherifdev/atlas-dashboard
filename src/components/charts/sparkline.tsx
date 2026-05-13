@@ -28,9 +28,9 @@ export function Sparkline({ data, color, dark = true, width = 110, height = 32 }
   return (
     <svg
       viewBox={`0 0 ${w} ${h}`}
-      width={w}
+      width="100%"
       height={h}
-      style={{ display: 'block', flexShrink: 0 }}
+      style={{ display: 'block' }}
       aria-hidden
     >
       <path d={area} fill={color} opacity={dark ? 0.15 : 0.1} />

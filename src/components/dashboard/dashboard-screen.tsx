@@ -37,7 +37,7 @@ export function DashboardScreen() {
           <AlertTriangle size={20} />
         </div>
         <h3 className="mb-1 text-base font-semibold" style={{ color: 'var(--atlas-text)' }}>
-          Couldn't load dashboard
+          Couldn&apos;t load dashboard
         </h3>
         <p className="mb-4 max-w-xs text-[13px]" style={{ color: 'var(--atlas-text-3)' }}>
           The metrics service returned 503. Atlas will retry automatically.
@@ -124,7 +124,7 @@ export function DashboardScreen() {
       <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-[2fr_1fr]">
         <Card>
           <CardHeader title="24-hour activity">
-            <div className="flex items-center gap-[14px] font-mono text-[11px]" style={{ color: 'var(--atlas-text-2)' }}>
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11px]" style={{ color: 'var(--atlas-text-2)' }}>
               <span className="flex items-center gap-[5px]">
                 <span className="inline-block h-2 w-2 rounded-[2px]"
                   style={{ background: dark ? 'rgba(230,230,233,.18)' : 'rgba(24,24,27,.12)' }} />total
@@ -132,7 +132,7 @@ export function DashboardScreen() {
               <span className="flex items-center gap-[5px]">
                 <span className="inline-block h-2 w-2 rounded-[2px] bg-[#ef4444]" />flagged
               </span>
-              <span style={{ color: 'var(--atlas-text-3)' }}>
+              <span className="hidden sm:inline" style={{ color: 'var(--atlas-text-3)' }}>
                 volume {fmtCcy(totalVolumeNGN, 'NGN', true)}
               </span>
             </div>
@@ -281,7 +281,7 @@ function Card({ children }: { children: React.ReactNode }) {
 
 function CardHeader({ title, children }: { title: string; children?: React.ReactNode }) {
   return (
-    <div className="mb-3 flex items-baseline justify-between">
+    <div className="mb-3 flex flex-wrap items-baseline justify-between gap-y-1">
       <h3 className="font-mono text-[12px] font-semibold uppercase tracking-[.06em]"
         style={{ color: 'var(--atlas-text-2)' }}>
         {title}
